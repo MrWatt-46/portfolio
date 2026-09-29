@@ -1,0 +1,236 @@
+/* ══════════════════════════════════════════════════════
+   COSMIC ORBIT LOADING SCREEN
+   Futuristic central sun, orbiting planet, circular progress
+   and smooth zoom-reveal transition.
+   ══════════════════════════════════════════════════════ */
+
+/* ── Loader Wrapper ──────────────────────────── */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050308;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transform: scale(1);
+  filter: blur(0px);
+  opacity: 1;
+  transition: 
+    opacity 0.8s cubic-bezier(0.25, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.25, 1, 0.3, 1),
+    filter 0.8s ease;
+}
+
+#loader.done {
+  opacity: 0;
+  transform: scale(1.18);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+/* ── Main content block ──────────────────────── */
+.loader-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.loader-content.fade-out {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+/* ── Cosmic Loader Container ────────────────── */
+.cosmic-loader {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Central Glowing Sun ────────────────────── */
+.cosmic-sun {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  background: radial-gradient(circle, #ffffff 10%, var(--sun-color) 60%, rgba(255, 180, 0, 0.3) 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 25px var(--sun-glow),
+    0 0 50px rgba(255, 215, 0, 0.25),
+    inset 0 0 8px rgba(255, 255, 255, 0.8);
+  animation: sun-pulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes sun-pulse {
+  0% {
+    transform: scale(0.94);
+    box-shadow: 
+      0 0 25px rgba(255, 215, 0, 0.4), 
+      0 0 50px rgba(255, 180, 0, 0.2);
+  }
+  100% {
+    transform: scale(1.06);
+    box-shadow: 
+      0 0 45px rgba(255, 215, 0, 0.85), 
+      0 0 90px rgba(255, 180, 0, 0.5);
+  }
+}
+
+/* ── Rotating Planet Orbit ──────────────────── */
+.cosmic-orbit {
+  position: absolute;
+  width: 114px;
+  height: 114px;
+  border: 1px dashed rgba(168, 124, 255, 0.2);
+  border-radius: 50%;
+  animation: orbit-rotate 5s linear infinite;
+}
+
+.cosmic-planet {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px var(--accent),
+    0 0 20px var(--accent);
+  background: radial-gradient(circle, #ffffff 10%, var(--accent) 80%);
+}
+
+@keyframes orbit-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Progress Ring SVG ──────────────────────── */
+.progress-ring {
+  position: absolute;
+  transform: rotate(-90deg);
+  width: 160px;
+  height: 160px;
+  z-index: 1;
+}
+
+.progress-ring-track {
+  fill: transparent;
+  stroke: rgba(168, 124, 255, 0.05);
+  stroke-width: 1.5px;
+}
+
+.progress-ring-fill {
+  fill: transparent;
+  stroke: url(#loader-gradient);
+  stroke-width: 3px;
+  stroke-dasharray: 465;
+  stroke-dashoffset: 465;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.08s linear;
+}
+
+/* ── Counter ────────────────────────────────── */
+.loader-counter-wrap {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loader-counter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0.85;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+/* ── Status Label ───────────────────────────── */
+.loader-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.75;
+  animation: status-pulse 1.6s ease-in-out infinite alternate;
+  text-align: center;
+}
+
+@keyframes status-pulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.95; text-shadow: 0 0 8px var(--accent-dim); }
+}
+
+/* ── "Welcome" text ──────────────────────────── */
+.loader-welcome {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: clamp(48px, 9vw, 96px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.loader-welcome.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Circle wipe overlay ─────────────────────── */
+.loader-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #050308;
+  clip-path: circle(0% at 50% 50%);
+  transition: none;
+  pointer-events: none;
+}
+
+.loader-overlay.expanding {
+  clip-path: circle(160% at 50% 50%);
+  transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ── Subtle background noise ─────────────────── */
+#loader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(168, 124, 255, 0.01) 2px,
+      rgba(168, 124, 255, 0.01) 4px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
